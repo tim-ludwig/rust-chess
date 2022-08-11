@@ -1,14 +1,14 @@
-enum Color {
-    WHITE,
-    BLACK
+pub enum Color {
+    White,
+    Black
 }
 
-enum Piece {
-    NONE,
-    KING(Color),
-    QUEEN(Color),
-    ROOK(Color),
-    BISHOP(Color),
-    KNIGHT(Color),
-    PAWN(Color)
+pub enum Piece {
+    None,
+    King(Color),
+    Queen(Color),
+    Rook(Color),
+    Bishop(Color),
+    Knight(Color),
+    Pawn(Color)
 }
