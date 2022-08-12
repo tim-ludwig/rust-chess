@@ -3,12 +3,12 @@ use std::str::FromStr;
 
 #[derive(Debug)]
 pub struct Board {
-    squares: [Board::Cell; 64]
+    squares: [Cell; 64]
 }
 
-impl Board {
-    type Cell = Option<Piece>;
+type Cell = Option<Piece>;
 
+impl Board {
     pub fn new() -> Board {
         Board{ squares: [None; 64] }
     }
