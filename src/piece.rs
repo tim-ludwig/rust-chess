@@ -1,16 +1,20 @@
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub enum Color {
     White,
     Black
 }
 
-#[derive(Copy, Clone)]
-pub enum Piece {
-    None,
-    King(Color),
-    Queen(Color),
-    Rook(Color),
-    Bishop(Color),
-    Knight(Color),
-    Pawn(Color)
+#[derive(Copy, Clone, Debug)]
+pub enum PieceType {
+    King,
+    Queen,
+    Rook,
+    Bishop,
+    Knight,
+    Pawn
+}
+
+pub struct Piece {
+    pub color: Color,
+    pub piece_type: PieceType
 }

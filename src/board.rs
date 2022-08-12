@@ -1,13 +1,16 @@
 use crate::piece::Piece;
 use std::str::FromStr;
 
+#[derive(Debug)]
 pub struct Board {
-    squares: [Piece; 64]
+    squares: [Board::Cell; 64]
 }
 
 impl Board {
+    type Cell = Option<Piece>;
+
     pub fn new() -> Board {
-        Board{ squares: [Piece::None; 64] }
+        Board{ squares: [None; 64] }
     }
 }
 
