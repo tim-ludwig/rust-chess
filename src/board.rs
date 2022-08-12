@@ -3,14 +3,14 @@ use std::str::FromStr;
 
 #[derive(Debug)]
 pub struct Board {
-    squares: [Cell; 64]
+    cells: [Cell; 64]
 }
 
 type Cell = Option<Piece>;
 
 impl Board {
     pub fn new() -> Board {
-        Board{ squares: [None; 64] }
+        Board{ cells: [None; 64] }
     }
 }
 
