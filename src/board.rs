@@ -54,16 +54,18 @@ impl FromStr for Board {
 
         for (idx, c) in fen_pos.chars().enumerate() {
             if c == '/' {
-                if file != 8 { return Err(Self::Err{description:format!("Invalid fen string '{}': didn't expect '/' at pos {}", fen_pos, idx)}); }
+                if file != 8 || rank == 0 { return Err(Self::Err{description:format!("Invalid fen string '{}': didn't expect '/' at pos {}", fen_pos, idx)}); }
 
                 rank -= 1;
                 file = 0;
             } else if c.is_digit(10) {
                 let offset: usize = c.to_digit(10).unwrap().try_into().unwrap();
-                if offset > 8 { return Err(Self::Err{description:format!("Invalid fen string '{}': invalid offset {} at {}", fen_pos, offset, idx)}); }
+                if offset > 8 || file + offset > 8 { return Err(Self::Err{description:format!("Invalid fen string '{}': invalid offset {} at pos {}", fen_pos, offset, idx)}); }
 
                 file += offset;
             } else {
+                if file >= 8 { return Err(Self::Err{description:format!("Invalid fen string '{}': position goes out of bounds at pos {}", fen_pos, idx)}) }
+
                 let p = match Piece::from_fen_char(&c) {
                     Some(p) => p,
                     None => return Err(Self::Err{description:format!("Invalid fen string '{}': '{}' at pos {} isn't a fen char", fen_pos, c, idx)})
