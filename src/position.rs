@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 pub struct Position {
@@ -14,6 +15,15 @@ impl From<(usize, usize)> for Position {
 impl From<usize> for Position {
     fn from(idx: usize) -> Self {
         (idx / 8, idx % 8).into()
+    }
+}
+
+impl Display for Position {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", (b'a' + self.file as u8) as char)?;
+        write!(f, "{}", (b'1' + self.rank as u8) as char)?;
+
+        Ok(())
     }
 }
 
