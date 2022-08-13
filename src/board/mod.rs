@@ -1,5 +1,7 @@
 pub mod position;
 
+use std::fmt::{Display, Formatter};
+use std::ptr::write;
 use crate::piece::Piece;
 use position::Position;
 use std::str::FromStr;
@@ -29,6 +31,32 @@ impl Board {
     pub fn move_piece(&mut self, from: &Position, to: &Position) -> Option<Piece> {
         let moved = self.remove_piece(from);
         self.put_piece(to, moved)
+    }
+}
+
+impl Display for Board {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        writeln!(f, "┏━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┯━━━┓")?;
+
+        for rank in (0..8).rev() {
+            write!(f, "┃")?;
+
+            for file in 0..8 {
+                let p = self.get_piece(&(rank, file).into());
+                let p = match p {
+                    None => ' ',
+                    Some(p) => p.get_figurine()
+                };
+                write!(f, " {} ", p)?;
+                if file != 7 { write!(f, "│")? }
+            }
+
+            writeln!(f, "┃")?;
+            if rank != 0 { writeln!(f, "┠───┼───┼───┼───┼───┼───┼───┼───┨")?; }
+        }
+        writeln!(f, "┗━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┷━━━┛")?;
+
+        Ok(())
     }
 }
 

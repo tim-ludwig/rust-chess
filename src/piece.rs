@@ -1,10 +1,10 @@
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Color {
     White,
     Black
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum PieceType {
     King,
     Queen,
@@ -14,7 +14,7 @@ pub enum PieceType {
     Pawn
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Piece {
     pub color: Color,
     pub piece_type: PieceType
@@ -38,6 +38,17 @@ impl PieceType {
             _ => return None
         })
     }
+
+    pub fn get_fen_char(&self) -> char {
+        match self {
+            PieceType::King => 'k',
+            PieceType::Queen => 'q',
+            PieceType::Rook => 'r',
+            PieceType::Bishop => 'b',
+            PieceType::Knight => 'n',
+            PieceType::Pawn => 'p'
+        }
+    }
 }
 
 impl Piece {
@@ -49,5 +60,32 @@ impl Piece {
         };
 
         Some(Piece { color: c, piece_type: t })
+    }
+
+    pub fn get_fen_char(&self) -> char {
+        let c = self.piece_type.get_fen_char();
+
+        if self.color == Color::White { c.to_ascii_uppercase() } else { c }
+    }
+
+    pub fn get_figurine(&self) -> char {
+        match self.color {
+            Color::White => match self.piece_type {
+                PieceType::King => '♚',
+                PieceType::Queen => '♛',
+                PieceType::Rook => '♜',
+                PieceType::Bishop => '♝',
+                PieceType::Knight => '♞',
+                PieceType::Pawn => '♟',
+            }
+            Color::Black => match self.piece_type {
+                PieceType::King => '♔',
+                PieceType::Queen => '♕',
+                PieceType::Rook => '♖',
+                PieceType::Bishop => '♗',
+                PieceType::Knight => '♘',
+                PieceType::Pawn => '♙',
+            }
+        }
     }
 }
