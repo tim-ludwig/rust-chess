@@ -42,12 +42,11 @@ impl Display for Board {
             write!(f, "┃")?;
 
             for file in 0..8 {
-                let p = self.get_piece(&(rank, file).into());
-                let p = match p {
-                    None => ' ',
-                    Some(p) => p.get_figurine()
-                };
-                write!(f, " {} ", p)?;
+                match self.get_piece(&(rank, file).into()) {
+                    None => write!(f, "   "),
+                    Some(p) => write!(f, " {} ", p)
+                }?;
+
                 if file != 7 { write!(f, "│")? }
             }
 

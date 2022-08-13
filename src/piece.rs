@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter};
+
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Color {
     White,
@@ -87,5 +89,11 @@ impl Piece {
                 PieceType::Pawn => '♙',
             }
         }
+    }
+}
+
+impl Display for Piece {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.get_figurine())
     }
 }
