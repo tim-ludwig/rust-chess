@@ -1,6 +1,5 @@
 mod piece;
 mod board;
-mod position;
 
 use board::Board;
 use crate::position::Position;
