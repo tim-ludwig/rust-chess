@@ -84,8 +84,8 @@ impl FromStr for Board {
 
 impl Board {
     fn read_fen_pos(&mut self, fen_pos: &str) -> Result<(), ParseFenError> {
-        let mut rank: usize = 7;
-        let mut file: usize = 0;
+        let mut rank: u8 = 7;
+        let mut file: u8 = 0;
 
         for (idx, c) in fen_pos.chars().enumerate() {
             if c == '/' {
@@ -94,7 +94,7 @@ impl Board {
                 rank -= 1;
                 file = 0;
             } else if c.is_digit(10) {
-                let offset: usize = c.to_digit(10).unwrap().try_into().unwrap();
+                let offset = c.to_digit(10).unwrap() as u8;
                 if offset > 8 || file + offset > 8 { return Err(ParseFenError{description:format!("Invalid fen string '{}': invalid offset {} at pos {}", fen_pos, offset, idx)}); }
 
                 file += offset;
