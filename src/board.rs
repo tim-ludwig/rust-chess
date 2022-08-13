@@ -14,7 +14,22 @@ impl Board {
         Board{ cells: [None; 64] }
     }
 
-    pub fn at(&self, pos: Position) -> Cell { self.cells[pos.idx()] }
+    pub fn get_piece(&self, pos: &Position) -> Cell { self.cells[pos.idx()] }
+
+    pub fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
+        let captured = self.cells[pos.idx()];
+        self.cells[pos.idx()] = p;
+        captured
+    }
+
+    pub fn remove_piece(&mut self, pos: &Position) -> Option<Piece> {
+        self.put_piece(pos, None)
+    }
+
+    pub fn move_piece(&mut self, from: &Position, to: &Position) -> Option<Piece> {
+        let moved = self.remove_piece(from);
+        self.put_piece(to, moved)
+    }
 }
 
 #[derive(Debug)]
@@ -34,28 +49,28 @@ impl FromStr for Board {
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no position supplied", s)})
         };
 
-        let mut rank = 7;
-        let mut file = 0;
+        let mut rank: usize = 7;
+        let mut file: usize = 0;
 
-        for c in fen_pos.chars() {
-            match c {
-                '/' => {
-                    if file != 7 { return Err(Self::Err{description:format!("Invalid fen string '{}': didn't expect '/'", s)}); }
+        for (idx, c) in fen_pos.chars().enumerate() {
+            if c == '/' {
+                if file != 8 { return Err(Self::Err{description:format!("Invalid fen string '{}': didn't expect '/' at pos {}", fen_pos, idx)}); }
 
-                    rank -= 1;
-                    file = 0;
-                },
-                '1'..='8' => match c.to_digit(10) {
-                    Some(n) => file += n,
-                    None => panic!("")
-                },
-                'K' | 'k' |
-                'Q' | 'q' |
-                'R' | 'r' |
-                'B' | 'b' |
-                'N' | 'n' |
-                'P' | 'p' => todo!(),
-                _ => return Err(Self::Err{description:format!("Invalid fen string '{}': invalid char in position", s)})
+                rank -= 1;
+                file = 0;
+            } else if c.is_digit(10) {
+                let offset: usize = c.to_digit(10).unwrap().try_into().unwrap();
+                if offset > 8 { return Err(Self::Err{description:format!("Invalid fen string '{}': invalid offset {} at {}", fen_pos, offset, idx)}); }
+
+                file += offset;
+            } else {
+                let p = match Piece::from_fen_char(&c) {
+                    Some(p) => p,
+                    None => return Err(Self::Err{description:format!("Invalid fen string '{}': '{}' at pos {} isn't a fen char", fen_pos, c, idx)})
+                };
+
+                b.put_piece(&(rank, file).into(), Some(p));
+                file += 1;
             }
         }
 
