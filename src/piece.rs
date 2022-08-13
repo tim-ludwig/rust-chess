@@ -22,13 +22,13 @@ pub struct Piece {
 
 impl Color {
     pub fn from_fen_char(c: &char) -> Color {
-        if fen_char.is_uppercase() { Color::White } else { Color::Black }
+        if c.is_uppercase() { Color::White } else { Color::Black }
     }
 }
 
 impl PieceType {
     pub fn from_fen_char(c: &char) -> Option<PieceType> {
-        Some(match fen_char.to_ascii_lowercase() {
+        Some(match c.to_ascii_lowercase() {
             'k' => PieceType::King,
             'q' => PieceType::Queen,
             'r' => PieceType::Rook,
