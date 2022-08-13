@@ -42,7 +42,7 @@ pub struct ParseFenError {
 impl FromStr for Board {
     type Err = ParseFenError;
 
-    fn from_str(s: &str) -> Result<Board, Self::Err> {
+    fn from_str(s: &str) -> Result<Board, ParseFenError> {
         let mut b = Board::new();
         let mut iter = s.split_whitespace();
 
