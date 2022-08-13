@@ -1,9 +1,8 @@
-mod position;
+pub mod position;
 
 use crate::piece::Piece;
-use crate::position::Position;
+use position::Position;
 use std::str::FromStr;
-use crate::board::position::Position;
 
 #[derive(Debug)]
 pub struct Board {
