@@ -6,17 +6,15 @@ use std::str::FromStr;
 
 #[derive(Debug)]
 pub struct Board {
-    cells: [Cell; 64]
+    cells: [Option<Piece>; 64]
 }
-
-type Cell = Option<Piece>;
 
 impl Board {
     pub fn new() -> Board {
         Board{ cells: [None; 64] }
     }
 
-    pub fn get_piece(&self, pos: &Position) -> Cell { self.cells[pos.idx()] }
+    pub fn get_piece(&self, pos: &Position) -> Option<Piece> { self.cells[pos.idx()] }
 
     pub fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
         let captured = self.cells[pos.idx()];
