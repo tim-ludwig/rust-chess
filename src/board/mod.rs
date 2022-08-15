@@ -45,7 +45,7 @@ impl Display for Board {
             write!(f, "┃")?;
 
             for file in 0..8 {
-                match self.get_piece(&(rank, file).into()) {
+                match self.get_piece(&Position::from(rank, file)) {
                     None => write!(f, "   "),
                     Some(p) => write!(f, " {} ", p)
                 }?;
@@ -109,7 +109,7 @@ impl Board {
                     None => return Err(ParseFenError{description:format!("Invalid fen string '{}': '{}' at pos {} isn't a fen char", fen_pos, c, idx)})
                 };
 
-                self.put_piece(&(rank, file).into(), Some(p));
+                self.put_piece(&Position::from(rank, file), Some(p));
                 file += 1;
             }
         }

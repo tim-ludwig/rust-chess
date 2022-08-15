@@ -7,7 +7,7 @@ pub struct Position {
 
 impl From<(u8, u8)> for Position {
     fn from((r, f): (u8, u8)) -> Self {
-        Position{ rank: r, file: f }
+        Position::from(r, f)
     }
 }
 
@@ -27,5 +27,11 @@ impl Display for Position {
 }
 
 impl Position {
-    pub fn idx(&self) -> usize { (self.rank * 8 + self.file) as usize}
+    pub fn from(r: u8, f: u8) -> Self {
+        Position{ rank: r, file: f }
+    }
+
+    pub fn idx(&self) -> usize {
+        (self.rank * 8 + self.file) as usize
+    }
 }
