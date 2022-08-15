@@ -50,7 +50,7 @@ impl Display for Board {
                     Some(p) => write!(f, " {} ", p)
                 }?;
 
-                if file != 7 { write!(f, "│")? }
+                if file != 7 { write!(f, "│")?; }
             }
 
             writeln!(f, "┃")?;
