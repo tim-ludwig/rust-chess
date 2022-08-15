@@ -13,7 +13,7 @@ impl From<(u8, u8)> for Position {
 
 impl From<usize> for Position {
     fn from(idx: usize) -> Self {
-        ((idx / 8) as u8, (idx % 8) as u8).into()
+        Position::from((idx / 8) as u8, (idx % 8) as u8)
     }
 }
 
