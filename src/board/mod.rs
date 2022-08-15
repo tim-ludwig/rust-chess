@@ -1,19 +1,22 @@
 pub mod position;
+mod game_state;
 
 use std::fmt::{Display, Formatter};
 use std::ptr::write;
 use crate::piece::Piece;
 use position::Position;
 use std::str::FromStr;
+use crate::board::game_state::GameState;
 
 #[derive(Debug)]
 pub struct Board {
-    cells: [Option<Piece>; 64]
+    cells: [Option<Piece>; 64],
+    state_stack: Vec<GameState>,
 }
 
 impl Board {
     pub fn new() -> Board {
-        Board{ cells: [None; 64] }
+        Board{ cells: [None; 64], state_stack: vec![] }
     }
 
     pub fn get_piece(&self, pos: &Position) -> Option<Piece> { self.cells[pos.idx()] }
