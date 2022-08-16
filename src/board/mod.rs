@@ -146,6 +146,23 @@ impl FromStr for Board {
             None => return parse_fen_error!("Invalid fen string '{}': no fifty move count specified", s)
         }
 
+        // current ply.
+        // FEN stores the move counter (not the ply count), starting at 1, so we need to adjust a little bit
+        match iter.next() {
+            Some(count) => {
+                match count.parse::<u32>() {
+                    Ok(count) => {
+                        let mut ply = (count - 1) * 2;
+                        if b.current_player == Color::Black { ply += 1; }
+
+                        b.ply =  ply;
+                    },
+                    Err(_) => return parse_fen_error!("Invalid fen string '{}': invalid move count '{}'", s, count),
+                }
+            },
+            None => return parse_fen_error!("Invalid fen string '{}': no move count specified", s)
+        }
+
         Ok(b)
     }
 }
