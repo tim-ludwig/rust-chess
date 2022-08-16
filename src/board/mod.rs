@@ -76,6 +76,12 @@ pub struct ParseFenError {
     description: String
 }
 
+macro_rules! parse_fen_error {
+    ($($fmt:expr),*) => {
+        Err(Self::Err{description:format!($($fmt),*)})
+    }
+}
+
 impl FromStr for Board {
     type Err = ParseFenError;
 
@@ -86,15 +92,15 @@ impl FromStr for Board {
         // position
         match iter.next() {
             Some(fen_pos) => b.read_fen_pos(fen_pos)?,
-            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no position supplied", s)})
+            None => return parse_fen_error!("Invalid fen string '{}': no position supplied", s)
         };
 
         // active color
         match iter.next() {
             Some("w") => b.current_player = Color::White,
             Some("b") => b.current_player = Color::Black,
-            Some(col) => return Err(Self::Err{description:format!("Invalid fen string '{}': invalid active color '{}'", s, col)}),
-            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no active color specified", s)})
+            Some(col) => return parse_fen_error!("Invalid fen string '{}': invalid active color '{}'", s, col),
+            None => return parse_fen_error!("Invalid fen string '{}': no active color specified", s)
         };
 
         // castling rights
@@ -102,10 +108,10 @@ impl FromStr for Board {
             Some(rights) => {
                 match rights.parse() {
                     Ok(state) => b.get_state_mut().castling = state,
-                    Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
+                    Err(ParseFenError{description}) => return parse_fen_error!("Invalid fen string '{}': {}", s, description)
                 }
             },
-            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no castling rights specified", s)})
+            None => return parse_fen_error!("Invalid fen string '{}': no castling rights specified", s)
         };
 
         // en passant file
@@ -114,10 +120,10 @@ impl FromStr for Board {
             Some(square) => {
                 match square.parse::<Position>() {
                     Ok(pos) => b.get_state_mut().en_passant_file = Some(pos.file),
-                    Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
+                    Err(ParseFenError{description}) => return parse_fen_error!("Invalid fen string '{}': {}", s, description)
                 }
             },
-            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no en-passant file specified", s)})
+            None => return parse_fen_error!("Invalid fen string '{}': no en-passant file specified", s)
         };
 
         // fifty move clock
@@ -125,10 +131,10 @@ impl FromStr for Board {
             Some(count) => {
                 match count.parse::<u8>() {
                     Ok(count) => b.get_state_mut().fifty_move_counter = count,
-                    Err(_) => return Err(Self::Err{description:format!("Invalid fen string '{}': invalid fifty move count '{}'", s, count)}),
+                    Err(_) => return parse_fen_error!("Invalid fen string '{}': invalid fifty move count '{}'", s, count),
                 }
             },
-            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no fifty move count specified", s)})
+            None => return parse_fen_error!("Invalid fen string '{}': no fifty move count specified", s)
         }
 
         Ok(b)
@@ -142,21 +148,27 @@ impl Board {
 
         for (idx, c) in fen_pos.chars().enumerate() {
             if c == '/' {
-                if file != 8 || rank == 0 { return Err(ParseFenError{description:format!("Invalid fen string '{}': didn't expect '/' at pos {}", fen_pos, idx)}); }
+                if file != 8 || rank == 0 {
+                    return parse_fen_error!("Invalid fen string '{}': didn't expect '/' at pos {}", fen_pos, idx);
+                }
 
                 rank -= 1;
                 file = 0;
             } else if c.is_digit(10) {
                 let offset = c.to_digit(10).unwrap() as u8;
-                if offset > 8 || file + offset > 8 { return Err(ParseFenError{description:format!("Invalid fen string '{}': invalid offset {} at pos {}", fen_pos, offset, idx)}); }
+                if offset > 8 || file + offset > 8 {
+                    return parse_fen_error!("Invalid fen string '{}': invalid offset {} at pos {}", fen_pos, offset, idx);
+                }
 
                 file += offset;
             } else {
-                if file >= 8 { return Err(ParseFenError{description:format!("Invalid fen string '{}': position goes out of bounds at pos {}", fen_pos, idx)}) }
+                if file >= 8 {
+                    return parse_fen_error!("Invalid fen string '{}': position goes out of bounds at pos {}", fen_pos, idx)
+                }
 
                 match Piece::from_fen_char(&c) {
                     Some(p) => self.put_piece(&Position::from(rank, file), Some(p)),
-                    None => return Err(ParseFenError{description:format!("Invalid fen string '{}': '{}' at pos {} isn't a fen char", fen_pos, c, idx)})
+                    None => return parse_fen_error!("Invalid fen string '{}': '{}' at pos {} isn't a fen char", fen_pos, c, idx)
                 };
 
                 file += 1;
