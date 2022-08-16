@@ -1,4 +1,6 @@
 use std::fmt::{Display, Formatter};
+use std::str::FromStr;
+use crate::board::ParseFenError;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Position {
@@ -34,5 +36,26 @@ impl Position {
 
     pub fn idx(&self) -> usize {
         (self.rank * 8 + self.file) as usize
+    }
+}
+
+impl FromStr for Position {
+    type Err =  ParseFenError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut chars = s.chars();
+        match (chars.next(), chars.next(), chars.next()) {
+            (Some(f), Some(r), None) => {
+                let r = r as u - b'1';
+                let f = f as u8 - b'a';
+
+                if 0 <= r &&  < 8 && 0 <= f && f < 8 {
+                    Ok(Position::from(r, f))
+                } else {
+                    Err(ParseFenError{description:format!("invalid position '{}'", s)})
+                }
+            },
+            _ => Err(ParseFenError{description:format!("invalid position '{}'", s)})
+        }
     }
 }
