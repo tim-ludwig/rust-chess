@@ -36,6 +36,14 @@ impl Board {
         let moved = self.remove_piece(from);
         self.put_piece(to, moved)
     }
+
+    fn get_state(&self) -> &GameState  {
+        unsafe { self.state_stack.last().expect("game state stack should not be empty") }
+    }
+
+    fn get_state_mut(&mut self) -> &mut GameState  {
+        unsafe { self.state_stack.last_mut().expect("game state stack should not be empty") }
+    }
 }
 
 impl Display for Board {
