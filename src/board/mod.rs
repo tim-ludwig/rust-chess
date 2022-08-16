@@ -112,7 +112,7 @@ impl FromStr for Board {
         match iter.next() {
             Some("-") => b.get_state_mut().en_passant_file =  None,
             Some(square) => {
-                match square.parse() {
+                match square.parse::<Position>() {
                     Ok(pos) => b.get_state_mut().en_passant_file = Some(pos.file),
                     Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
                 }
