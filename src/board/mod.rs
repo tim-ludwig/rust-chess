@@ -80,6 +80,12 @@ impl FromStr for Board {
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no position supplied", s)})
         })?;
 
+        match iter.next() {
+            Some("w") => b.current_player = Color::White,
+            Some("b") => b.current_player = Color::Black,
+            Some(col) => return Err(Self::Err{description:format!("Invalid fen string '{}': invalid active color '{}'", s, col)}),
+            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no active color specified", s)})
+        };
 
         Ok(b)
     }
