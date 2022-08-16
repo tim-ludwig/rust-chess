@@ -121,6 +121,17 @@ impl FromStr for Board {
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no en-passant file specified", s)})
         };
 
+        // fifty move clock
+        match iter.next() {
+            Some(count) => {
+                match count.parse::<u8>() {
+                    Ok(count) => b.get_state_mut().fifty_move_counter = count,
+                    Err(..) => return Err(Self::Err{description:format!("Invalid fen string '{}': invalid fifty move count '{}'", s, count)}),
+                }
+            },
+            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no fifty move count specified", s)})
+        }
+
         Ok(b)
     }
 }
