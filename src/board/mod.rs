@@ -63,7 +63,7 @@ impl Display for Board {
     }
 }
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Clone, Debug)]
 pub struct ParseFenError {
     description: String
 }
