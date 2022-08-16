@@ -3,7 +3,7 @@ mod game_state;
 
 use std::fmt::{Display, Formatter};
 use std::ptr::write;
-use crate::piece::Piece;
+use crate::piece::{Color, Piece};
 use position::Position;
 use std::str::FromStr;
 use crate::board::game_state::GameState;
@@ -12,11 +12,12 @@ use crate::board::game_state::GameState;
 pub struct Board {
     cells: [Option<Piece>; 64],
     state_stack: Vec<GameState>,
+    current_player: Color,
 }
 
 impl Board {
     pub fn new() -> Board {
-        Board{ cells: [None; 64], state_stack: vec![] }
+        Board{ cells: [None; 64], state_stack: vec![], current_player: Color::White }
     }
 
     pub fn get_piece(&self, pos: &Position) -> Option<Piece> { self.cells[pos.idx()] }
