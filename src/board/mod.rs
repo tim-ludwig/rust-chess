@@ -97,7 +97,7 @@ impl FromStr for Board {
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no active color specified", s)})
         };
 
-        //castling rights
+        // castling rights
         let result: Result<CastlingState, _> = match iter.next() {
             Some(rights) => rights.parse(),
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no castling rights specified", s)})
@@ -106,6 +106,20 @@ impl FromStr for Board {
             Ok(state) => b.get_state_mut().castling = state,
             Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
         }
+
+        // en passant file
+        match iter.next() {
+            Some("-") => b.get_state_mut().en_passant_file =  None,
+            Some(square) => {
+                let result: Result<Position, _> = square.parse();
+
+                match result {
+                    Ok(pos) => b.get_state_mut().en_passant_file = Some(pos.file),
+                    Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
+                }
+            },
+            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no en-passant file specified", s)})
+        };
 
         Ok(b)
     }
