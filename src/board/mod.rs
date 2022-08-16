@@ -181,7 +181,7 @@ impl Board {
                 file = 0;
             } else if c.is_digit(10) {
                 let offset = c.to_digit(10).unwrap() as u8;
-                if offset > 8 || file + offset > 8 {
+                if file + offset > 8 {
                     return parse_fen_error!("Invalid fen string '{}': invalid offset {} at pos {}", fen_pos, offset, idx);
                 }
 
