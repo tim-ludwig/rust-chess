@@ -74,12 +74,11 @@ impl FromStr for Board {
         let mut b = Board::new();
         let mut iter = s.split_whitespace();
 
-        let fen_pos = match iter.next() {
+        b.read_fen_pos(match iter.next() {
             Some(fen_pos) => fen_pos,
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no position supplied", s)})
-        };
+        })?;
 
-        b.read_fen_pos(fen_pos)?;
 
         Ok(b)
     }
