@@ -6,7 +6,7 @@ use std::ptr::write;
 use crate::piece::{Color, Piece};
 use position::Position;
 use std::str::FromStr;
-use crate::board::game_state::GameState;
+use crate::board::game_state::{CastlingState, GameState};
 
 #[derive(Debug)]
 pub struct Board {
@@ -96,6 +96,16 @@ impl FromStr for Board {
             Some(col) => return Err(Self::Err{description:format!("Invalid fen string '{}': invalid active color '{}'", s, col)}),
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no active color specified", s)})
         };
+
+        //castling rights
+        let result: Result<CastlingState, _> = match iter.next() {
+            Some(rights) => rights.parse(),
+            None => return Err(Self::Err{description:format!("Invalid fen string '{}': no castling rights specified", s)})
+        };
+        match result {
+            Ok(state) => b.get_state_mut().castling = state,
+            Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
+        }
 
         Ok(b)
     }
