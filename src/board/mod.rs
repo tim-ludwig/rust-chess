@@ -136,29 +136,29 @@ impl FromStr for Board {
 
         // fifty move clock
         match iter.next() {
-            Some(count) => {
-                match count.parse::<u8>() {
+            Some(count_str) => {
+                match count_str.parse::<u8>() {
                     Ok(count) =>  b.get_state_mut().fifty_move_counter = count,
-                    Err(_) => return parse_fen_error!("Invalid fen string '{}': invalid fifty move count '{}'", s, count),
+                    Err(_) => return parse_fen_error!("Invalid fen string '{}': invalid fifty move count '{}'", s, count_str),
                 }
-            },
+            }
             None => return parse_fen_error!("Invalid fen string '{}': no fifty move count specified", s)
         }
 
         // current ply.
         // FEN stores the move counter (not the ply count), starting at 1, so we need to adjust a little bit
         match iter.next() {
-            Some(count) => {
-                match count.parse::<u32>() {
+            Some(count_str) => {
+                match count_str.parse::<u32>() {
                     Ok(count) => {
                         let mut ply = (count - 1) * 2;
                         if b.current_player == Color::Black { ply += 1; }
 
                         b.ply =  ply;
                     },
-                    Err(_) => return parse_fen_error!("Invalid fen string '{}': invalid move count '{}'", s, count),
+                    Err(_) => return parse_fen_error!("Invalid fen string '{}': invalid move count '{}'", s, count_str),
                 }
-            },
+            }
             None => return parse_fen_error!("Invalid fen string '{}': no move count specified", s)
         }
 
