@@ -95,6 +95,7 @@ impl FromStr for Board {
 
     fn from_str(s: &str) -> Result<Board, ParseFenError> {
         let mut b = Board::new();
+        let state = b.get_state_mut();
         let mut iter = s.split_whitespace();
 
         // position
@@ -115,7 +116,7 @@ impl FromStr for Board {
         match iter.next() {
             Some(rights) => {
                 match rights.parse() {
-                    Ok(state) => b.get_state_mut().castling = state,
+                    Ok(castling_state) => state.castling = castling_state,
                     Err(ParseFenError{description}) => return parse_fen_error!("Invalid fen string '{}': {}", s, description)
                 }
             },
@@ -124,10 +125,10 @@ impl FromStr for Board {
 
         // en passant file
         match iter.next() {
-            Some("-") => b.get_state_mut().en_passant_file =  None,
+            Some("-") => state.en_passant_file =  None,
             Some(square) => {
                 match square.parse::<Position>() {
-                    Ok(pos) => b.get_state_mut().en_passant_file = Some(pos.file),
+                    Ok(pos) => state.en_passant_file = Some(pos.file),
                     Err(ParseFenError{description}) => return parse_fen_error!("Invalid fen string '{}': {}", s, description)
                 }
             },
@@ -138,7 +139,7 @@ impl FromStr for Board {
         match iter.next() {
             Some(count) => {
                 match count.parse::<u8>() {
-                    Ok(count) => b.get_state_mut().fifty_move_counter = count,
+                    Ok(count) => state.fifty_move_counter = count,
                     Err(_) => return parse_fen_error!("Invalid fen string '{}': invalid fifty move count '{}'", s, count),
                 }
             },
