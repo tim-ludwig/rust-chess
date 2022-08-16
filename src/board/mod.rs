@@ -86,7 +86,7 @@ pub struct ParseFenError {
 
 macro_rules! parse_fen_error {
     ($($fmt:expr),*) => {
-        Err(Self::Err{description:format!($($fmt),*)})
+        Err(ParseFenError{description:format!($($fmt),*)})
     }
 }
 
