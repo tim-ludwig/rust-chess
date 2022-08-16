@@ -75,11 +75,13 @@ impl FromStr for Board {
         let mut b = Board::new();
         let mut iter = s.split_whitespace();
 
+        // position
         match iter.next() {
             Some(fen_pos) => b.read_fen_pos(fen_pos)?,
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no position supplied", s)})
         };
 
+        // active color
         match iter.next() {
             Some("w") => b.current_player = Color::White,
             Some("b") => b.current_player = Color::Black,
