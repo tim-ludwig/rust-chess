@@ -13,14 +13,22 @@ pub struct Board {
     cells: [Option<Piece>; 64],
     state_stack: Vec<GameState>,
     current_player: Color,
+    ply: u32,
 }
 
 impl Board {
     pub fn new() -> Board {
-        Board{ cells: [None; 64], state_stack: vec![GameState::new()], current_player: Color::White }
+        Board {
+            cells: [None; 64],
+            state_stack: vec![GameState::new()],
+            current_player: Color::White,
+            ply: 0
+        }
     }
 
-    pub fn get_piece(&self, pos: &Position) -> Option<Piece> { self.cells[pos.idx()] }
+    pub fn get_piece(&self, pos: &Position) -> Option<Piece> {
+        self.cells[pos.idx()]
+    }
 
     pub fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
         let captured = self.cells[pos.idx()];
