@@ -1,4 +1,6 @@
 use crate::piece::Piece;
+use std::str::FromStr;
+use crate::board::ParseFenError;
 
 #[derive(Copy, Clone, Debug)]
 pub struct CastlingState {
@@ -11,11 +13,29 @@ pub struct CastlingState {
 impl CastlingState {
     pub fn new() -> CastlingState {
         CastlingState {
-            white_short: true,
-            white_long: true,
-            black_short: true,
-            black_long: true
+            white_short: false,
+            white_long: false,
+            black_short: false,
+            black_long: false
         }
+    }
+}
+
+impl FromStr for CastlingState {
+    type Err = ParseFenError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut state = CastlingState::new();
+
+        let mut count = 0;
+        if s.contains('K') { state.white_short = true; count += 1; }
+        if s.contains('Q') { state.white_long  = true; count += 1; }
+        if s.contains('k') { state.black_short = true; count += 1; }
+        if s.contains('q') { state.black_long  = true; count += 1; }
+
+        if count == 0 && s != "-" || count > 0 && s.len() != count { return Err(ParseFenError{description:format!("invalid castling rights '{}'", s)}) }
+
+        Ok(state)
     }
 }
 
