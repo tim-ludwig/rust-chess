@@ -98,22 +98,21 @@ impl FromStr for Board {
         };
 
         // castling rights
-        let result: Result<CastlingState, _> = match iter.next() {
-            Some(rights) => rights.parse(),
+        match iter.next() {
+            Some(rights) => {
+                match rights.parse() {
+                    Ok(state) => b.get_state_mut().castling = state,
+                    Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
+                }
+            },
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no castling rights specified", s)})
         };
-        match result {
-            Ok(state) => b.get_state_mut().castling = state,
-            Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
-        }
 
         // en passant file
         match iter.next() {
             Some("-") => b.get_state_mut().en_passant_file =  None,
             Some(square) => {
-                let result: Result<Position, _> = square.parse();
-
-                match result {
+                match square.parse() {
                     Ok(pos) => b.get_state_mut().en_passant_file = Some(pos.file),
                     Err(ParseFenError{description}) => return Err(Self::Err{description:format!("Invalid fen string '{}': {}", s, description)})
                 }
@@ -126,7 +125,7 @@ impl FromStr for Board {
             Some(count) => {
                 match count.parse::<u8>() {
                     Ok(count) => b.get_state_mut().fifty_move_counter = count,
-                    Err(..) => return Err(Self::Err{description:format!("Invalid fen string '{}': invalid fifty move count '{}'", s, count)}),
+                    Err(_) => return Err(Self::Err{description:format!("Invalid fen string '{}': invalid fifty move count '{}'", s, count)}),
                 }
             },
             None => return Err(Self::Err{description:format!("Invalid fen string '{}': no fifty move count specified", s)})
