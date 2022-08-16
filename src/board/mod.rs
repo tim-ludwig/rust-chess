@@ -63,7 +63,7 @@ impl Display for Board {
     }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct ParseFenError {
     description: String
 }
@@ -112,12 +112,11 @@ impl Board {
             } else {
                 if file >= 8 { return Err(ParseFenError{description:format!("Invalid fen string '{}': position goes out of bounds at pos {}", fen_pos, idx)}) }
 
-                let p = match Piece::from_fen_char(&c) {
-                    Some(p) => p,
+                match Piece::from_fen_char(&c) {
+                    Some(p) => self.put_piece(&Position::from(rank, file), Some(p)),
                     None => return Err(ParseFenError{description:format!("Invalid fen string '{}': '{}' at pos {} isn't a fen char", fen_pos, c, idx)})
                 };
 
-                self.put_piece(&Position::from(rank, file), Some(p));
                 file += 1;
             }
         }
