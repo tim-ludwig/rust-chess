@@ -46,10 +46,10 @@ impl FromStr for Position {
         let mut chars = s.chars();
         match (chars.next(), chars.next(), chars.next()) {
             (Some(f), Some(r), None) => {
-                let r = r as u - b'1';
+                let r = r as u8 - b'1';
                 let f = f as u8 - b'a';
 
-                if 0 <= r &&  < 8 && 0 <= f && f < 8 {
+                if 0 <= r && r < 8 && 0 <= f && f < 8 {
                     Ok(Position::from(r, f))
                 } else {
                     Err(ParseFenError{description:format!("invalid position '{}'", s)})
