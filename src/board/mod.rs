@@ -38,11 +38,11 @@ impl Board {
     }
 
     fn get_state(&self) -> &GameState  {
-        unsafe { self.state_stack.last().expect("game state stack should not be empty") }
+        self.state_stack.last().expect("game state stack should not be empty")
     }
 
     fn get_state_mut(&mut self) -> &mut GameState  {
-        unsafe { self.state_stack.last_mut().expect("game state stack should not be empty") }
+        self.state_stack.last_mut().expect("game state stack should not be empty")
     }
 }
 
