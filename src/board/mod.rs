@@ -17,7 +17,7 @@ pub struct Board {
 
 impl Board {
     pub fn new() -> Board {
-        Board{ cells: [None; 64], state_stack: vec![], current_player: Color::White }
+        Board{ cells: [None; 64], state_stack: vec![GameState::new()], current_player: Color::White }
     }
 
     pub fn get_piece(&self, pos: &Position) -> Option<Piece> { self.cells[pos.idx()] }
