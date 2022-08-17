@@ -1,5 +1,6 @@
 pub mod position;
 mod game_state;
+mod tests;
 
 use std::fmt::{Display, Formatter};
 use std::ptr::write;
