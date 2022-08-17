@@ -222,4 +222,13 @@ mod tests {
         assert_eq!(old, b.put_piece(&Position::from(0, 0), new));
         assert_eq!(new, b.get_piece(&Position::from(0, 0)))
     }
+
+    #[test]
+    fn remove_piece() {
+        let mut b = Board::new();
+        let old = b.get_piece(&Position::from(1, 3));
+
+        assert_eq!(old, b.remove_piece(&Position::from(1, 3)));
+        assert!(b.get_piece(&Position::from(1, 3)).is_none());
+    }
 }
