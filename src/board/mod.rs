@@ -1,6 +1,5 @@
 pub mod position;
 mod game_state;
-mod tests;
 
 use std::fmt::{Display, Formatter};
 use std::ptr::write;
@@ -204,5 +203,13 @@ impl Board {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test() {
+        assert_eq!(2, 2)
     }
 }
