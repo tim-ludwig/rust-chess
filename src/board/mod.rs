@@ -183,12 +183,12 @@ impl Board {
                 rank -= 1;
                 file = 0;
             } else if c.is_digit(10) {
-                let offset = c.to_digit(10).unwrap();
+                let offset = c.to_digit(10).unwrap() as u8;
                 if file + offset > 8 {
                     return parse_fen_error!("Invalid fen string '{}': invalid offset {} at pos {}", fen_pos, offset, idx);
                 }
 
-                file += offset as u8;
+                file += offset;
             } else {
                 if file >= 8 {
                     return parse_fen_error!("Invalid fen string '{}': position goes out of bounds at pos {}", fen_pos, idx)
