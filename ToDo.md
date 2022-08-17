@@ -3,7 +3,7 @@
 - [ ] Board
   - put_piece
     - [x] Impl
-    - [ ] Test
+    - [x] Test
   - remove_piece
     - [x] Impl
     - [ ] Test

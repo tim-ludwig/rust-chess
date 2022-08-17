@@ -208,8 +208,18 @@ impl Board {
 
 #[cfg(test)]
 mod tests {
+    use crate::Board;
+    use crate::board::position::Position;
+    use crate::piece::{Color, Piece, PieceType};
+
     #[test]
-    fn test() {
-        assert_eq!(2, 2)
+    fn put_piece() {
+        let mut b = Board::new();
+
+        let old = b.get_piece(&Position::from(0, 0));
+        let new: Option<Piece> = Some(Piece{ color: Color::Black, piece_type: PieceType::Bishop });
+
+        assert_eq!(old, b.put_piece(&Position::from(0, 0), new));
+        assert_eq!(new, b.get_piece(&Position::from(0, 0)))
     }
 }
