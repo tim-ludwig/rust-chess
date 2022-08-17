@@ -17,13 +17,10 @@ pub struct Board {
 }
 
 impl Board {
+    const STARTING_FEN: &'static str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
     pub fn new() -> Board {
-        Board {
-            cells: [None; 64],
-            state_stack: vec![GameState::new()],
-            current_player: Color::White,
-            ply: 0
-        }
+        Self::STARTING_FEN.parse().expect("Invalid starting fen supplied")
     }
 
     pub fn get_piece(&self, pos: &Position) -> Option<Piece> {
@@ -94,7 +91,12 @@ impl FromStr for Board {
     type Err = ParseFenError;
 
     fn from_str(s: &str) -> Result<Board, ParseFenError> {
-        let mut b = Board::new();
+        let mut b = Board {
+            cells: [None; 64],
+            state_stack: vec![GameState::new()],
+            current_player: Color::White,
+            ply: 0
+        };
         let mut iter = s.split_whitespace();
 
         // position
