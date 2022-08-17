@@ -9,7 +9,7 @@
     - [x] Test
   - move_piece
     - [x] Impl
-    - [ ] Test
+    - [x] Test
   - fen parsing
     - [x] Impl
     - [ ] Test

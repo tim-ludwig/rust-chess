@@ -231,4 +231,18 @@ mod tests {
         assert_eq!(old, b.remove_piece(&Position::from(1, 3)));
         assert!(b.get_piece(&Position::from(1, 3)).is_none());
     }
+
+    #[test]
+    fn move_piece() {
+        let mut b = Board::new();
+
+        let from = Position::from(7, 3);
+        let to = Position::from(1, 3);
+        let to_move = b.get_piece(&from);
+        let to_capture = b.get_piece(&to);
+
+        assert_eq!(to_capture, b.move_piece(&from, &to));
+        assert_eq!(to_move, b.get_piece(&to));
+        assert!(b.get_piece(&from).is_none());
+    }
 }
