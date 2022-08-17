@@ -2,11 +2,10 @@ pub mod position;
 mod game_state;
 
 use std::fmt::{Display, Formatter};
-use std::ptr::write;
 use crate::piece::{Color, Piece};
 use position::Position;
 use std::str::FromStr;
-use crate::board::game_state::{CastlingState, GameState};
+use crate::board::game_state::GameState;
 
 #[derive(Debug)]
 pub struct Board {
