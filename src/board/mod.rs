@@ -215,20 +215,23 @@ mod tests {
     fn put_piece() {
         let mut b = Board::new();
 
-        let old = b.get_piece(&Position::from(0, 0));
-        let new: Option<Piece> = Some(Piece{ color: Color::Black, piece_type: PieceType::Bishop });
+        let to = Position::from(0, 0);
+        let to_capture = b.get_piece(&to);
+        let to_place: Option<Piece> = Some(Piece{ color: Color::Black, piece_type: PieceType::Bishop });
 
-        assert_eq!(old, b.put_piece(&Position::from(0, 0), new));
-        assert_eq!(new, b.get_piece(&Position::from(0, 0)))
+        assert_eq!(to_capture, b.put_piece(&to, to_place));
+        assert_eq!(to_place, b.get_piece(&to))
     }
 
     #[test]
     fn remove_piece() {
         let mut b = Board::new();
-        let old = b.get_piece(&Position::from(1, 3));
 
-        assert_eq!(old, b.remove_piece(&Position::from(1, 3)));
-        assert!(b.get_piece(&Position::from(1, 3)).is_none());
+        let from = Position::from(1, 3);
+        let to_remove = b.get_piece(&from);
+
+        assert_eq!(to_remove, b.remove_piece(&from));
+        assert!(b.get_piece(&from).is_none());
     }
 
     #[test]
