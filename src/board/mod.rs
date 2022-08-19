@@ -247,4 +247,39 @@ mod tests {
         assert_eq!(to_move, b.get_piece(&to));
         assert!(b.get_piece(&from).is_none());
     }
+
+    #[test]
+    fn start_position() {
+        let b = Board::new();
+
+        assert_eq!('R', b.get_piece(&Position::from(0, 0)).unwrap().fen_char());
+        assert_eq!('N', b.get_piece(&Position::from(0, 1)).unwrap().fen_char());
+        assert_eq!('B', b.get_piece(&Position::from(0, 2)).unwrap().fen_char());
+        assert_eq!('Q', b.get_piece(&Position::from(0, 3)).unwrap().fen_char());
+        assert_eq!('K', b.get_piece(&Position::from(0, 4)).unwrap().fen_char());
+        assert_eq!('B', b.get_piece(&Position::from(0, 5)).unwrap().fen_char());
+        assert_eq!('N', b.get_piece(&Position::from(0, 6)).unwrap().fen_char());
+        assert_eq!('R', b.get_piece(&Position::from(0, 7)).unwrap().fen_char());
+
+        assert_eq!('r', b.get_piece(&Position::from(7, 0)).unwrap().fen_char());
+        assert_eq!('n', b.get_piece(&Position::from(7, 1)).unwrap().fen_char());
+        assert_eq!('b', b.get_piece(&Position::from(7, 2)).unwrap().fen_char());
+        assert_eq!('q', b.get_piece(&Position::from(7, 3)).unwrap().fen_char());
+        assert_eq!('k', b.get_piece(&Position::from(7, 4)).unwrap().fen_char());
+        assert_eq!('b', b.get_piece(&Position::from(7, 5)).unwrap().fen_char());
+        assert_eq!('n', b.get_piece(&Position::from(7, 6)).unwrap().fen_char());
+        assert_eq!('r', b.get_piece(&Position::from(7, 7)).unwrap().fen_char());
+
+        assert_eq!(Color::White, b.current_player);
+
+        assert!(b.get_state().castling.white_short);
+        assert!(b.get_state().castling.white_long);
+        assert!(b.get_state().castling.black_short);
+        assert!(b.get_state().castling.black_long);
+
+        assert!(b.get_state().en_passant_file.is_none());
+
+        assert_eq!(0, b.get_state().fifty_move_counter);
+        assert_eq!(0, b.ply);
+    }
 }
