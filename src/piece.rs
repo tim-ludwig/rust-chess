@@ -64,13 +64,13 @@ impl Piece {
         Some(Piece { color: c, piece_type: t })
     }
 
-    pub fn get_fen_char(&self) -> char {
+    pub fn fen_char(&self) -> char {
         let c = self.piece_type.get_fen_char();
 
         if self.color == Color::White { c.to_ascii_uppercase() } else { c }
     }
 
-    pub fn get_figurine(&self) -> char {
+    pub fn figurine(&self) -> char {
         match self.color {
             Color::White => match self.piece_type {
                 PieceType::King => '♚',
@@ -94,6 +94,6 @@ impl Piece {
 
 impl Display for Piece {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.get_figurine())
+        write!(f, "{}", self.figurine())
     }
 }
