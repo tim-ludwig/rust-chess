@@ -248,38 +248,85 @@ mod tests {
         assert!(b.get_piece(&from).is_none());
     }
 
-    #[test]
-    fn start_position() {
-        let b = Board::new();
+    mod fen_parsing {
+        use crate::Board;
+        use crate::board::position::Position;
+        use crate::piece::{Color, Piece};
 
-        assert_eq!('R', b.get_piece(&Position::from(0, 0)).unwrap().fen_char());
-        assert_eq!('N', b.get_piece(&Position::from(0, 1)).unwrap().fen_char());
-        assert_eq!('B', b.get_piece(&Position::from(0, 2)).unwrap().fen_char());
-        assert_eq!('Q', b.get_piece(&Position::from(0, 3)).unwrap().fen_char());
-        assert_eq!('K', b.get_piece(&Position::from(0, 4)).unwrap().fen_char());
-        assert_eq!('B', b.get_piece(&Position::from(0, 5)).unwrap().fen_char());
-        assert_eq!('N', b.get_piece(&Position::from(0, 6)).unwrap().fen_char());
-        assert_eq!('R', b.get_piece(&Position::from(0, 7)).unwrap().fen_char());
+        #[test]
+        fn start_position() {
+            let b = Board::new();
 
-        assert_eq!('r', b.get_piece(&Position::from(7, 0)).unwrap().fen_char());
-        assert_eq!('n', b.get_piece(&Position::from(7, 1)).unwrap().fen_char());
-        assert_eq!('b', b.get_piece(&Position::from(7, 2)).unwrap().fen_char());
-        assert_eq!('q', b.get_piece(&Position::from(7, 3)).unwrap().fen_char());
-        assert_eq!('k', b.get_piece(&Position::from(7, 4)).unwrap().fen_char());
-        assert_eq!('b', b.get_piece(&Position::from(7, 5)).unwrap().fen_char());
-        assert_eq!('n', b.get_piece(&Position::from(7, 6)).unwrap().fen_char());
-        assert_eq!('r', b.get_piece(&Position::from(7, 7)).unwrap().fen_char());
+            assert_eq!('R', b.get_piece(&Position::from(0, 0)).unwrap().fen_char());
+            assert_eq!('N', b.get_piece(&Position::from(0, 1)).unwrap().fen_char());
+            assert_eq!('B', b.get_piece(&Position::from(0, 2)).unwrap().fen_char());
+            assert_eq!('Q', b.get_piece(&Position::from(0, 3)).unwrap().fen_char());
+            assert_eq!('K', b.get_piece(&Position::from(0, 4)).unwrap().fen_char());
+            assert_eq!('B', b.get_piece(&Position::from(0, 5)).unwrap().fen_char());
+            assert_eq!('N', b.get_piece(&Position::from(0, 6)).unwrap().fen_char());
+            assert_eq!('R', b.get_piece(&Position::from(0, 7)).unwrap().fen_char());
 
-        assert_eq!(Color::White, b.current_player);
+            assert_eq!('r', b.get_piece(&Position::from(7, 0)).unwrap().fen_char());
+            assert_eq!('n', b.get_piece(&Position::from(7, 1)).unwrap().fen_char());
+            assert_eq!('b', b.get_piece(&Position::from(7, 2)).unwrap().fen_char());
+            assert_eq!('q', b.get_piece(&Position::from(7, 3)).unwrap().fen_char());
+            assert_eq!('k', b.get_piece(&Position::from(7, 4)).unwrap().fen_char());
+            assert_eq!('b', b.get_piece(&Position::from(7, 5)).unwrap().fen_char());
+            assert_eq!('n', b.get_piece(&Position::from(7, 6)).unwrap().fen_char());
+            assert_eq!('r', b.get_piece(&Position::from(7, 7)).unwrap().fen_char());
 
-        assert!(b.get_state().castling.white_short);
-        assert!(b.get_state().castling.white_long);
-        assert!(b.get_state().castling.black_short);
-        assert!(b.get_state().castling.black_long);
+            assert_eq!(Color::White, b.current_player);
 
-        assert!(b.get_state().en_passant_file.is_none());
+            assert!(b.get_state().castling.white_short);
+            assert!(b.get_state().castling.white_long);
+            assert!(b.get_state().castling.black_short);
+            assert!(b.get_state().castling.black_long);
 
-        assert_eq!(0, b.get_state().fifty_move_counter);
-        assert_eq!(0, b.ply);
+            assert!(b.get_state().en_passant_file.is_none());
+
+            assert_eq!(0, b.get_state().fifty_move_counter);
+            assert_eq!(0, b.ply);
+        }
+
+        #[test]
+        fn position() {
+            // 1. e4 c5 2. Nf3
+            let b: Board = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2".parse().unwrap();
+
+            assert_eq!('R', b.get_piece(&Position::from(0, 0)).unwrap().fen_char());
+            assert_eq!('N', b.get_piece(&Position::from(0, 1)).unwrap().fen_char());
+            assert_eq!('B', b.get_piece(&Position::from(0, 2)).unwrap().fen_char());
+            assert_eq!('Q', b.get_piece(&Position::from(0, 3)).unwrap().fen_char());
+            assert_eq!('K', b.get_piece(&Position::from(0, 4)).unwrap().fen_char());
+            assert_eq!('B', b.get_piece(&Position::from(0, 5)).unwrap().fen_char());
+            assert!(b.get_piece(&Position::from(0, 6)).is_none());
+            assert_eq!('R', b.get_piece(&Position::from(0, 7)).unwrap().fen_char());
+            assert!(b.get_piece(&Position::from(1, 4)).is_none());
+            assert_eq!('N', b.get_piece(&Position::from(2, 5)).unwrap().fen_char());
+            assert_eq!('P', b.get_piece(&Position::from(3, 4)).unwrap().fen_char());
+
+            assert_eq!('p', b.get_piece(&Position::from(4, 2)).unwrap().fen_char());
+            assert!(b.get_piece(&Position::from(6, 2)).is_none());
+            assert_eq!('r', b.get_piece(&Position::from(7, 0)).unwrap().fen_char());
+            assert_eq!('n', b.get_piece(&Position::from(7, 1)).unwrap().fen_char());
+            assert_eq!('b', b.get_piece(&Position::from(7, 2)).unwrap().fen_char());
+            assert_eq!('q', b.get_piece(&Position::from(7, 3)).unwrap().fen_char());
+            assert_eq!('k', b.get_piece(&Position::from(7, 4)).unwrap().fen_char());
+            assert_eq!('b', b.get_piece(&Position::from(7, 5)).unwrap().fen_char());
+            assert_eq!('n', b.get_piece(&Position::from(7, 6)).unwrap().fen_char());
+            assert_eq!('r', b.get_piece(&Position::from(7, 7)).unwrap().fen_char());
+
+            assert_eq!(Color::Black, b.current_player);
+
+            assert!(b.get_state().castling.white_short);
+            assert!(b.get_state().castling.white_long);
+            assert!(b.get_state().castling.black_short);
+            assert!(b.get_state().castling.black_long);
+
+            assert!(b.get_state().en_passant_file.is_none());
+
+            assert_eq!(1, b.get_state().fifty_move_counter);
+            assert_eq!(3, b.ply);
+        }
     }
 }
