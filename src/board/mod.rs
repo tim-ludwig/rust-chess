@@ -328,5 +328,13 @@ mod tests {
             assert_eq!(1, b.get_state().fifty_move_counter);
             assert_eq!(3, b.ply);
         }
+
+        #[test]
+        fn en_passant() {
+            // 1. e4 c5
+            let b: Board = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2".parse().unwrap();
+
+            assert_eq!(2, b.get_state().en_passant_file.unwrap());
+        }
     }
 }
