@@ -1,5 +1,4 @@
 pub mod position;
-pub mod representation;
 mod game_state;
 
 use std::fmt::{Display, Formatter};
@@ -7,12 +6,10 @@ use crate::piece::{Color, Piece};
 use position::Position;
 use std::str::FromStr;
 use crate::board::game_state::GameState;
-use crate::board::representation::BoardRepr;
-use crate::board::representation::grid::Grid;
 
 #[derive(Debug)]
 pub struct Board {
-    grid: Grid,
+    cells: [Option<Piece>; 64],
     state_stack: Vec<GameState>,
     current_player: Color,
     ply: u32,
@@ -21,30 +18,35 @@ pub struct Board {
 impl Board {
     const STARTING_FEN: &'static str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+    pub fn new() -> Board {
+        Self::STARTING_FEN.parse().expect("Invalid starting fen supplied")
+    }
+
+    pub fn get_piece(&self, pos: &Position) -> Option<Piece> {
+        self.cells[pos.idx()]
+    }
+
+    pub fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
+        let captured = self.cells[pos.idx()];
+        self.cells[pos.idx()] = p;
+        captured
+    }
+
+    pub fn remove_piece(&mut self, pos: &Position) -> Option<Piece> {
+        self.put_piece(pos, None)
+    }
+
+    pub fn move_piece(&mut self, from: &Position, to: &Position) -> Option<Piece> {
+        let moved = self.remove_piece(from);
+        self.put_piece(to, moved)
+    }
+
     fn get_state(&self) -> &GameState  {
         self.state_stack.last().expect("game state stack should not be empty")
     }
 
     fn get_state_mut(&mut self) -> &mut GameState  {
         self.state_stack.last_mut().expect("game state stack should not be empty")
-    }
-}
-
-impl BoardRepr for Board {
-    fn new() -> Self {
-        Self::STARTING_FEN.parse().expect("Invalid starting fen supplied")
-    }
-
-    fn get_piece(&self, pos: &Position) -> Option<Piece> {
-        self.grid.get_piece(pos)
-    }
-
-    fn pos_of_piece(&self, p: &Piece) -> Option<Position> {
-        self.grid.pos_of_piece(p)
-    }
-
-    fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
-        self.grid.put_piece(pos, p)
     }
 }
 
@@ -89,7 +91,7 @@ impl FromStr for Board {
 
     fn from_str(s: &str) -> Result<Board, ParseFenError> {
         let mut b = Board {
-            grid: Grid::new(),
+            cells: [None; 64],
             state_stack: vec![GameState::new()],
             current_player: Color::White,
             ply: 0
@@ -207,7 +209,6 @@ impl Board {
 mod tests {
     use crate::Board;
     use crate::board::position::Position;
-    use crate::board::representation::BoardRepr;
     use crate::piece::{Color, Piece, PieceType};
 
     #[test]
@@ -248,7 +249,7 @@ mod tests {
     }
 
     mod fen_parsing {
-        use crate::{Board, BoardRepr};
+        use crate::Board;
         use crate::board::position::Position;
         use crate::piece::{Color, Piece};
 
