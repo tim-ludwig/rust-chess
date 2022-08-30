@@ -6,8 +6,6 @@ use crate::piece::Piece;
 pub trait BoardRepr {
     fn new() -> Self;
 
-    fn get_piece(&self, pos: &Position) -> Option<Piece>;
-    fn pos_of_piece(&self, p: &Piece) -> Option<Position>;
     fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece>;
 
     fn remove_piece(&mut self, pos: &Position) -> Option<Piece> {
