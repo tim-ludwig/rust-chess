@@ -1,12 +1,14 @@
 use std::fmt::{Display, Formatter};
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug)]
+#[derive(Eq, Hash, PartialEq)]
 pub enum Color {
     White,
     Black
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug)]
+#[derive(Eq, Hash, PartialEq)]
 pub enum PieceType {
     King,
     Queen,
@@ -16,7 +18,8 @@ pub enum PieceType {
     Pawn
 }
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug)]
+#[derive(Eq, Hash, PartialEq)]
 pub struct Piece {
     pub color: Color,
     pub piece_type: PieceType
@@ -25,6 +28,10 @@ pub struct Piece {
 impl Color {
     pub fn from_fen_char(c: &char) -> Color {
         if c.is_uppercase() { Color::White } else { Color::Black }
+    }
+
+    pub fn iter() -> impl Iterator<Item=Color> {
+        [Color::White, Color::Black].iter().copied()
     }
 }
 
@@ -50,6 +57,10 @@ impl PieceType {
             PieceType::Knight => 'n',
             PieceType::Pawn => 'p'
         }
+    }
+
+    pub fn iter() -> impl Iterator<Item=PieceType> {
+        [PieceType::King, PieceType::Queen, PieceType::Rook, PieceType::Bishop, PieceType::Knight, PieceType::Pawn].iter().copied()
     }
 }
 

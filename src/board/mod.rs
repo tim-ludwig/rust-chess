@@ -1,6 +1,7 @@
 pub mod position;
 mod game_state;
 mod grid;
+mod piece_list;
 
 use std::fmt::{Display, Formatter};
 use crate::piece::{Color, Piece};

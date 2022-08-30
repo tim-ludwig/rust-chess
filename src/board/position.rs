@@ -3,6 +3,7 @@ use std::str::FromStr;
 use crate::board::ParseFenError;
 
 #[derive(Copy, Clone, Debug)]
+#[derive(Eq, Hash, PartialEq)]
 pub struct Position {
     pub rank: u8,
     pub file: u8
