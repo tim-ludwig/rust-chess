@@ -1,16 +1,16 @@
-use std::collections::{HashMap, HashSet};
 use crate::board::position::Position;
 use crate::piece::{Color, Piece, PieceType};
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug)]
 pub struct PieceList {
-    lists: HashMap<Color, HashMap<PieceType, HashSet<Position>>>
+    lists: HashMap<Color, HashMap<PieceType, HashSet<Position>>>,
 }
 
 impl PieceList {
     pub fn new() -> Self {
         let mut l = Self {
-            lists: HashMap::new()
+            lists: HashMap::new(),
         };
 
         for c in Color::iter() {
@@ -25,12 +25,20 @@ impl PieceList {
         l
     }
 
-    fn get(&self, p: &Piece) -> &HashSet<Position>{
-        self.lists.get(&p.color).unwrap().get(&p.piece_type).unwrap()
+    fn get(&self, p: &Piece) -> &HashSet<Position> {
+        self.lists
+            .get(&p.color)
+            .unwrap()
+            .get(&p.piece_type)
+            .unwrap()
     }
 
-    fn get_mut(&mut self, p: &Piece) -> &mut HashSet<Position>{
-        self.lists.get_mut(&p.color).unwrap().get_mut(&p.piece_type).unwrap()
+    fn get_mut(&mut self, p: &Piece) -> &mut HashSet<Position> {
+        self.lists
+            .get_mut(&p.color)
+            .unwrap()
+            .get_mut(&p.piece_type)
+            .unwrap()
     }
 
     pub fn put_piece(&mut self, p: &Piece, pos: &Position) {
@@ -41,7 +49,7 @@ impl PieceList {
         self.get_mut(p).remove(pos);
     }
 
-    pub fn pos_of_piece(&self, p: &Piece) -> impl Iterator<Item=Position> + '_ {
+    pub fn pos_of_piece(&self, p: &Piece) -> impl Iterator<Item = Position> + '_ {
         self.get(p).iter().copied()
     }
 
@@ -54,10 +62,10 @@ impl PieceList {
 
 #[cfg(test)]
 mod tests {
-    use std::str::FromStr;
     use crate::board::piece_list::PieceList;
     use crate::board::position::Position;
     use crate::piece::Piece;
+    use std::str::FromStr;
 
     #[test]
     fn put_piece() {

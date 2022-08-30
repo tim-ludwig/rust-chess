@@ -3,14 +3,12 @@ use crate::piece::Piece;
 
 #[derive(Debug)]
 pub struct Grid {
-    cells: [Option<Piece>; 64]
+    cells: [Option<Piece>; 64],
 }
 
 impl Grid {
     pub fn new() -> Self {
-        Self {
-            cells: [None; 64]
-        }
+        Self { cells: [None; 64] }
     }
 
     pub fn get_piece(&self, pos: &Position) -> Option<Piece> {

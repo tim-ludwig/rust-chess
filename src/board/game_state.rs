@@ -1,6 +1,6 @@
+use crate::board::ParseFenError;
 use crate::piece::Piece;
 use std::str::FromStr;
-use crate::board::ParseFenError;
 
 #[derive(Copy, Clone, Debug)]
 pub struct CastlingState {
@@ -16,7 +16,7 @@ impl CastlingState {
             white_short: false,
             white_long: false,
             black_short: false,
-            black_long: false
+            black_long: false,
         }
     }
 }
@@ -28,12 +28,28 @@ impl FromStr for CastlingState {
         let mut state = CastlingState::new();
 
         let mut count = 0;
-        if s.contains('K') { state.white_short = true; count += 1; }
-        if s.contains('Q') { state.white_long  = true; count += 1; }
-        if s.contains('k') { state.black_short = true; count += 1; }
-        if s.contains('q') { state.black_long  = true; count += 1; }
+        if s.contains('K') {
+            state.white_short = true;
+            count += 1;
+        }
+        if s.contains('Q') {
+            state.white_long = true;
+            count += 1;
+        }
+        if s.contains('k') {
+            state.black_short = true;
+            count += 1;
+        }
+        if s.contains('q') {
+            state.black_long = true;
+            count += 1;
+        }
 
-        if count == 0 && s != "-" || count > 0 && s.len() != count { return Err(ParseFenError{description:format!("invalid castling rights '{}'", s)}) }
+        if count == 0 && s != "-" || count > 0 && s.len() != count {
+            return Err(ParseFenError {
+                description: format!("invalid castling rights '{}'", s),
+            });
+        }
 
         Ok(state)
     }
@@ -44,7 +60,7 @@ pub struct GameState {
     pub castling: CastlingState,
     pub en_passant_file: Option<u8>,
     pub fifty_move_counter: u8,
-    pub captured_piece: Option<Piece>
+    pub captured_piece: Option<Piece>,
 }
 
 impl GameState {
@@ -53,7 +69,7 @@ impl GameState {
             castling: CastlingState::new(),
             en_passant_file: None,
             fifty_move_counter: 0,
-            captured_piece: None
+            captured_piece: None,
         }
     }
 
@@ -62,7 +78,7 @@ impl GameState {
             castling: self.castling,
             en_passant_file: None,
             fifty_move_counter: self.fifty_move_counter + 1,
-            captured_piece: None
+            captured_piece: None,
         }
     }
 }

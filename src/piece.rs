@@ -1,36 +1,37 @@
 use std::fmt::{Display, Formatter};
 
-#[derive(Copy, Clone, Debug)]
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Color {
     White,
-    Black
+    Black,
 }
 
-#[derive(Copy, Clone, Debug)]
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub enum PieceType {
     King,
     Queen,
     Rook,
     Bishop,
     Knight,
-    Pawn
+    Pawn,
 }
 
-#[derive(Copy, Clone, Debug)]
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Piece {
     pub color: Color,
-    pub piece_type: PieceType
+    pub piece_type: PieceType,
 }
 
 impl Color {
     pub fn from_fen_char(c: &char) -> Color {
-        if c.is_uppercase() { Color::White } else { Color::Black }
+        if c.is_uppercase() {
+            Color::White
+        } else {
+            Color::Black
+        }
     }
 
-    pub fn iter() -> impl Iterator<Item=Color> {
+    pub fn iter() -> impl Iterator<Item = Color> {
         [Color::White, Color::Black].iter().copied()
     }
 }
@@ -44,7 +45,7 @@ impl PieceType {
             'b' => PieceType::Bishop,
             'n' => PieceType::Knight,
             'p' => PieceType::Pawn,
-            _ => return None
+            _ => return None,
         })
     }
 
@@ -55,12 +56,21 @@ impl PieceType {
             PieceType::Rook => 'r',
             PieceType::Bishop => 'b',
             PieceType::Knight => 'n',
-            PieceType::Pawn => 'p'
+            PieceType::Pawn => 'p',
         }
     }
 
-    pub fn iter() -> impl Iterator<Item=PieceType> {
-        [PieceType::King, PieceType::Queen, PieceType::Rook, PieceType::Bishop, PieceType::Knight, PieceType::Pawn].iter().copied()
+    pub fn iter() -> impl Iterator<Item = PieceType> {
+        [
+            PieceType::King,
+            PieceType::Queen,
+            PieceType::Rook,
+            PieceType::Bishop,
+            PieceType::Knight,
+            PieceType::Pawn,
+        ]
+        .iter()
+        .copied()
     }
 }
 
@@ -69,16 +79,23 @@ impl Piece {
         let c = Color::from_fen_char(fen_char);
         let t = match PieceType::from_fen_char(fen_char) {
             None => return None,
-            Some(t) => t
+            Some(t) => t,
         };
 
-        Some(Piece { color: c, piece_type: t })
+        Some(Piece {
+            color: c,
+            piece_type: t,
+        })
     }
 
     pub fn fen_char(&self) -> char {
         let c = self.piece_type.get_fen_char();
 
-        if self.color == Color::White { c.to_ascii_uppercase() } else { c }
+        if self.color == Color::White {
+            c.to_ascii_uppercase()
+        } else {
+            c
+        }
     }
 
     pub fn figurine(&self) -> char {
@@ -90,7 +107,7 @@ impl Piece {
                 PieceType::Bishop => '♝',
                 PieceType::Knight => '♞',
                 PieceType::Pawn => '♟',
-            }
+            },
             Color::Black => match self.piece_type {
                 PieceType::King => '♔',
                 PieceType::Queen => '♕',
@@ -98,7 +115,7 @@ impl Piece {
                 PieceType::Bishop => '♗',
                 PieceType::Knight => '♘',
                 PieceType::Pawn => '♙',
-            }
+            },
         }
     }
 }

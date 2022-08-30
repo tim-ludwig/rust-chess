@@ -1,12 +1,11 @@
+use crate::board::ParseFenError;
 use std::fmt::{Display, Formatter};
 use std::str::FromStr;
-use crate::board::ParseFenError;
 
-#[derive(Copy, Clone, Debug)]
-#[derive(Eq, Hash, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Position {
     pub rank: u8,
-    pub file: u8
+    pub file: u8,
 }
 
 impl From<(u8, u8)> for Position {
@@ -32,7 +31,7 @@ impl Display for Position {
 
 impl Position {
     pub fn from(r: u8, f: u8) -> Self {
-        Position{ rank: r, file: f }
+        Position { rank: r, file: f }
     }
 
     pub fn idx(&self) -> usize {
@@ -41,19 +40,23 @@ impl Position {
 }
 
 impl FromStr for Position {
-    type Err =  ParseFenError;
+    type Err = ParseFenError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut chars = s.chars();
         match (chars.next(), chars.next(), chars.next()) {
             (Some(f), Some(r), None) => {
                 if !('1' <= r && r <= '8' && 'a' <= f && f <= 'h') {
-                    Err(ParseFenError{description:format!("invalid position '{}'", s)})
+                    Err(ParseFenError {
+                        description: format!("invalid position '{}'", s),
+                    })
                 } else {
                     Ok(Position::from(r as u8 - b'1', f as u8 - b'a'))
                 }
-            },
-            _ => Err(ParseFenError{description:format!("invalid position '{}'", s)})
+            }
+            _ => Err(ParseFenError {
+                description: format!("invalid position '{}'", s),
+            }),
         }
     }
 }

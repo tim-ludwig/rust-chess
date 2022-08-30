@@ -1,5 +1,5 @@
-mod piece;
 mod board;
+mod piece;
 
 use board::Board;
 
