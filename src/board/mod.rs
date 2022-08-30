@@ -24,20 +24,20 @@ impl Board {
         Self::STARTING_FEN.parse().expect("Invalid starting fen supplied")
     }
 
-    pub fn get_piece(&self, pos: &Position) -> Option<Piece> {
+    fn get_piece(&self, pos: &Position) -> Option<Piece> {
         self.grid.get_piece(pos)
     }
 
-    pub fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
+    fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
         let captured = self.grid.put_piece(pos, p);
         captured
     }
 
-    pub fn remove_piece(&mut self, pos: &Position) -> Option<Piece> {
+    fn remove_piece(&mut self, pos: &Position) -> Option<Piece> {
         self.grid.remove_piece(pos)
     }
 
-    pub fn move_piece(&mut self, from: &Position, to: &Position) -> Option<Piece> {
+    fn move_piece(&mut self, from: &Position, to: &Position) -> Option<Piece> {
         let moved = self.get_piece(from);
         let captured = self.grid.move_piece(from, to);
         captured
