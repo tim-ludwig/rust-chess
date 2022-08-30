@@ -9,10 +9,12 @@ use position::Position;
 use std::str::FromStr;
 use crate::board::game_state::GameState;
 use crate::board::grid::Grid;
+use crate::board::piece_list::PieceList;
 
 #[derive(Debug)]
 pub struct Board {
     grid: Grid,
+    piece_list: PieceList,
     state_stack: Vec<GameState>,
     current_player: Color,
     ply: u32,
@@ -31,16 +33,38 @@ impl Board {
 
     fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
         let captured = self.grid.put_piece(pos, p);
+
+        if let Some(piece) = p {
+            self.piece_list.put_piece(&piece, pos);
+        }
+        if let Some(piece) = captured {
+            self.piece_list.remove_piece(&piece, pos);
+        }
+
         captured
     }
 
     fn remove_piece(&mut self, pos: &Position) -> Option<Piece> {
-        self.grid.remove_piece(pos)
+        let removed = self.grid.remove_piece(pos);
+
+        if let Some(piece) = removed {
+            self.piece_list.remove_piece(&piece, pos);
+        }
+
+        removed
     }
 
     fn move_piece(&mut self, from: &Position, to: &Position) -> Option<Piece> {
         let moved = self.get_piece(from);
         let captured = self.grid.move_piece(from, to);
+
+        if let Some(piece) = moved {
+            self.piece_list.move_piece(&piece, from, to);
+        }
+        if let Some(piece) = captured {
+            self.piece_list.remove_piece(&piece, to);
+        }
+
         captured
     }
 
@@ -95,6 +119,7 @@ impl FromStr for Board {
     fn from_str(s: &str) -> Result<Board, ParseFenError> {
         let mut b = Board {
             grid: Grid::new(),
+            piece_list: PieceList::new(),
             state_stack: vec![GameState::new()],
             current_player: Color::White,
             ply: 0

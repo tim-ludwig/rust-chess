@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use crate::board::position::Position;
 use crate::piece::{Color, Piece, PieceType};
 
+#[derive(Debug)]
 pub struct PieceList {
     lists: HashMap<Color, HashMap<PieceType, HashSet<Position>>>
 }
@@ -32,8 +33,8 @@ impl PieceList {
         self.lists.get_mut(&p.color).unwrap().get_mut(&p.piece_type).unwrap()
     }
 
-    pub fn put_piece(&mut self, p: &Piece, pos: Position) {
-        self.get_mut(p).insert(pos);
+    pub fn put_piece(&mut self, p: &Piece, pos: &Position) {
+        self.get_mut(p).insert(*pos);
     }
 
     pub fn remove_piece(&mut self, p: &Piece, pos: &Position) {
@@ -44,10 +45,10 @@ impl PieceList {
         self.get(p).iter().copied()
     }
 
-    pub fn move_piece(&mut self, p: &Piece, from: &Position, to: Position) {
+    pub fn move_piece(&mut self, p: &Piece, from: &Position, to: &Position) {
         let l = self.get_mut(p);
         l.remove(from);
-        l.insert(to);
+        l.insert(*to);
     }
 }
 
@@ -73,17 +74,17 @@ mod tests {
         let to = "g8".parse().unwrap();
         let h8 = "h8".parse().unwrap();
 
-        l.put_piece(&wr, a1);
-        l.put_piece(&wp, "a2".parse().unwrap());
-        l.put_piece(&br, from);
-        l.put_piece(&br, h8);
-        l.put_piece(&bp, "a7".parse().unwrap());
+        l.put_piece(&wr, &a1);
+        l.put_piece(&wp, &"a2".parse().unwrap());
+        l.put_piece(&br, &from);
+        l.put_piece(&br, &h8);
+        l.put_piece(&bp, &"a7".parse().unwrap());
 
         assert!(l.pos_of_piece(&wr).find(|p| p == &a1).is_some());
         assert!(l.pos_of_piece(&br).find(|p| p == &from).is_some());
         assert!(l.pos_of_piece(&br).find(|p| p == &h8).is_some());
 
-        l.move_piece(&br, &from, to);
+        l.move_piece(&br, &from, &to);
 
         assert!(l.pos_of_piece(&wr).find(|p| p == &a1).is_some());
         assert!(l.pos_of_piece(&br).find(|p| p == &from).is_none());
