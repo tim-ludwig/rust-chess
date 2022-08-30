@@ -1,15 +1,17 @@
 pub mod position;
 mod game_state;
+mod grid;
 
 use std::fmt::{Display, Formatter};
 use crate::piece::{Color, Piece};
 use position::Position;
 use std::str::FromStr;
 use crate::board::game_state::GameState;
+use crate::board::grid::Grid;
 
 #[derive(Debug)]
 pub struct Board {
-    cells: [Option<Piece>; 64],
+    grid: Grid,
     state_stack: Vec<GameState>,
     current_player: Color,
     ply: u32,
@@ -23,22 +25,22 @@ impl Board {
     }
 
     pub fn get_piece(&self, pos: &Position) -> Option<Piece> {
-        self.cells[pos.idx()]
+        self.grid.get_piece(pos)
     }
 
     pub fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
-        let captured = self.cells[pos.idx()];
-        self.cells[pos.idx()] = p;
+        let captured = self.grid.put_piece(pos, p);
         captured
     }
 
     pub fn remove_piece(&mut self, pos: &Position) -> Option<Piece> {
-        self.put_piece(pos, None)
+        self.grid.remove_piece(pos)
     }
 
     pub fn move_piece(&mut self, from: &Position, to: &Position) -> Option<Piece> {
-        let moved = self.remove_piece(from);
-        self.put_piece(to, moved)
+        let moved = self.get_piece(from);
+        let captured = self.grid.move_piece(from, to);
+        captured
     }
 
     fn get_state(&self) -> &GameState  {
@@ -91,7 +93,7 @@ impl FromStr for Board {
 
     fn from_str(s: &str) -> Result<Board, ParseFenError> {
         let mut b = Board {
-            cells: [None; 64],
+            grid: Grid::new(),
             state_stack: vec![GameState::new()],
             current_player: Color::White,
             ply: 0
