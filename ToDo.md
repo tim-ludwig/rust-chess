@@ -19,5 +19,5 @@
 
 - [ ] Additional bord information
   - [ ] Attack/Defend maps
-  - [ ] Piece lists
+  - [x] Piece lists
   - [ ] Zobrist hash
