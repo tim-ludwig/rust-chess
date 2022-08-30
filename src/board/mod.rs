@@ -28,15 +28,19 @@ impl Board {
     fn get_state_mut(&mut self) -> &mut GameState  {
         self.state_stack.last_mut().expect("game state stack should not be empty")
     }
-
-    pub fn get_piece(&self, pos: &Position) -> Option<Piece> {
-        self.grid.get_piece(pos)
-    }
 }
 
 impl BoardRepr for Board {
     fn new() -> Self {
         Self::STARTING_FEN.parse().expect("Invalid starting fen supplied")
+    }
+
+    fn get_piece(&self, pos: &Position) -> Option<Piece> {
+        self.grid.get_piece(pos)
+    }
+
+    fn pos_of_piece(&self, p: &Piece) -> Option<Position> {
+        self.grid.pos_of_piece(p)
     }
 
     fn put_piece(&mut self, pos: &Position, p: Option<Piece>) -> Option<Piece> {
