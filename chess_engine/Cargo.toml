@@ -6,4 +6,3 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chess_terminal_ui = { path = "../chess_terminal_ui" }

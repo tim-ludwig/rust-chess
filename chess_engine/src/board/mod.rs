@@ -294,7 +294,7 @@ impl Board {
 mod tests {
     use crate::board::position::Position;
     use crate::piece::{Color, Piece, PieceType};
-    use crate::Board;
+    use crate::board::Board;
 
     #[test]
     fn put_piece() {
@@ -339,7 +339,7 @@ mod tests {
     mod fen_parsing {
         use crate::board::position::Position;
         use crate::piece::{Color, Piece};
-        use crate::Board;
+        use crate::board::Board;
 
         #[test]
         fn start_position() {
