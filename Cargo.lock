@@ -3,12 +3,12 @@
 version = 3
 
 [[package]]
-name = "chess_engine"
+name = "chess"
 version = "0.1.0"
 
 [[package]]
 name = "chess_terminal_ui"
 version = "0.1.0"
 dependencies = [
- "chess_engine",
+ "chess",
 ]

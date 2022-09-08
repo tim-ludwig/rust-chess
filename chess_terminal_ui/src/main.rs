@@ -1,4 +1,4 @@
-use chess_engine::board::Board;
+use chess::board::Board;
 
 #[cfg(test)]
 mod tests {
